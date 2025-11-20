@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Message for Ridhi ❤️</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Dancing Script Font for a romantic feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Tone.js removed as requested. -->
+    <style>
+        /* Global Styles */
+        body {
+            /* Changed font to Dancing Script */
+            font-family: 'Dancing Script', cursive; 
+            cursor: pointer;
+            overflow: hidden; /* Hide scrollbar */
+            perspective: 1000px; /* Enable 3D space for parallax */
+        }
+        /* Custom Keyframe for the 'Love' Pulse */
+        @keyframes lovePulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+        .love-pulse {
+            animation: lovePulse 3s infinite ease-in-out;
+        }
+        /* Style for the central container to handle transitions */
+        #stage-content-container {
+            transition: transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 1.5s ease;
+            /* Ensure it stays flat in 3D space for transitions */
+            transform-style: preserve-3d; 
+        }
+        /* Confetti/Heart Animation CSS */
+        .confetti {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: #ff007f;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+            filter: drop-shadow(0 0 5px rgba(255, 0, 127, 0.5));
+        }
+        /* Parallax Layer - for the "deep" layer */
+        #parallax-layer {
+            position: absolute;
+            inset: -20px; /* Make it slightly larger than the container */
+            pointer-events: none;
+            z-index: 10;
+        }
+        /* Cursor Hearts (for interactive drawing) */
+        .cursor-heart {
+            position: absolute;
+            pointer-events: none;
+            font-size: 1.5rem;
+            opacity: 0;
+            animation: fadeAndRise 1.5s ease-out forwards;
+        }
+        @keyframes fadeAndRise {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-50px); opacity: 0; }
+        }
+    </style>
+</head>
+<!-- Changed background color to a deep, warm taupe/brown: bg-[#28211a] -->
+<body class="bg-[#28211a] text-white flex items-center justify-center min-h-screen">
+
+    <!-- The Main Stage Container -->
+    <div id="greeting-app" class="w-full max-w-4xl p-8 md:p-12 relative overflow-hidden">
+        
+        <!-- Parallax Layer (for background visual effect) -->
+        <div id="parallax-layer" class="text-4xl opacity-20 hidden md:block">
+            <span class="absolute top-1/4 left-1/4">✨</span>
+            <span class="absolute bottom-1/3 right-1/4">❤️</span>
+            <span class="absolute top-1/2 right-1/2">💫</span>
+        </div>
+
+        <!-- Stage Content (Transitions applied to this) -->
+        <div id="stage-content-container" class="text-center relative z-20">
+
+            <!-- Dynamic Content Area -->
+            <h1 id="main-heading" class="text-3xl md:text-6xl font-extrabold love-pulse mb-6 transition-all duration-1000 ease-in-out">
+                A Message for Ridhi
+            </h1>
+            <p id="sub-text" class="text-xl md:text-2xl font-light opacity-90 transition-all duration-1000 ease-in-out">
+                Move your cursor/finger over the screen to begin...
+            </p>
+            <button id="next-button" class="mt-12 px-8 py-3 bg-[#ff007f] text-white font-semibold rounded-full shadow-lg hover:bg-[#e60072] transition-colors duration-300 opacity-0 pointer-events-none">
+                Continue
+            </button>
+
+            <!-- Small Heart Decorations -->
+            <div id="decorations" class="mt-8 text-4xl space-x-4 opacity-50 transition-opacity duration-1000">
+                ❤️ ✨ ❤️
+            </div>
+        </div>
+
+        <!-- Confetti/Hearts Layer for Finale and Cursor Drawing -->
+        <div id="confetti-layer" class="absolute inset-0 pointer-events-none z-40"></div>
+
+    </div>
+
+    <script>
+        // --- 1. STAGE CONTENT & LOGIC (Updated for Ridhi) ---
+
+        const stages = [
+            {
+                heading: "A Message for Ridhi",
+                sub: "Move your cursor/finger over the screen to begin...",
+                decoration: "❤️ ✨ ❤️",
+                actionText: "Begin"
+            },
+            {
+                heading: "Ridhi, My Love",
+                sub: "You are the most beautiful part of my life — the softness in my chaos, the warmth in my cold days, and the light that never fades no matter how dark the world feels. Happy Birthday! ❤️",
+                decoration: "🌹 💖",
+                actionText: "Next Promise"
+            },
+            {
+                heading: "On Your Birthday",
+                sub: "I want you to know this with every beat of my heart: I am here for you, with you, and beside you, always. Wishing you the best birthday! ✨",
+                decoration: "♾️ 🌟",
+                actionText: "The Commitment"
+            },
+            {
+                heading: "Through the Storms",
+                sub: "No matter what life brings, no matter how hard things get, no matter how many storms try to shake us, I will stay. Happy Birthday, my strength!",
+                decoration: "⚓️ 🛡️",
+                actionText: "My Vow"
+            },
+            {
+                heading: "I Choose You",
+                sub: "I will choose you again and again — in every lifetime, every moment, every version of me. You make life beautiful. Happy Birthday! 🌌",
+                decoration: "💫 ❤️",
+                actionText: "The Ultimate Message"
+            },
+            {
+                heading: "Happy Birthday, Ridhi! (Part 1)",
+                sub: "You are cherished, adored, and loved beyond words, today and every day. Wishing you joy on your special day! 🎂",
+                decoration: "🎂 🎁 🎉",
+                actionText: "Part 2"
+            },
+            {
+                heading: "Happy Birthday, Ridhi! (Part 2)",
+                sub: "My love, you are the most beautiful part of my life — the softness in my chaos, the warmth in my cold days, and the light that never fades. You deserve the world. ❤️",
+                decoration: "👑 💖",
+                actionText: "The Grand Finale"
+            },
+            {
+                heading: "Forever and Always.",
+                sub: "Ridhi, my love, you are the most beautiful part of my life — the softness in my chaos, the warmth in my cold days, and the light that never fades no matter how dark the world feels. On your birthday, I want you to know this with every beat of my heart: I am here for you, with you, and beside you, always. No matter what life brings, no matter how hard things get, no matter how many storms try to shake us, I will stay. I will choose you again and again — in every lifetime, every moment, every version of me. Happy Birthday, Ridhi. You are cherished, adored, and loved beyond words, today and every day. ❤️",
+                decoration: "✨🥳❤️",
+                actionText: "..." // Final stage, button disappears
+            },
+        ];
+
+        let currentStage = 0;
+        const app = document.getElementById('greeting-app');
+        const container = document.getElementById('stage-content-container');
+        const heading = document.getElementById('main-heading');
+        const subText = document.getElementById('sub-text');
+        const decorations = document.getElementById('decorations');
+        const nextButton = document.getElementById('next-button');
+        const finaleLayer = document.getElementById('confetti-layer');
+        const parallaxLayer = document.getElementById('parallax-layer');
+
+
+        function updateStage(stageIndex) {
+            if (stageIndex >= stages.length) {
+                // Finale state - do not proceed past the last stage
+                return;
+            }
+
+            const stage = stages[stageIndex];
+            currentStage = stageIndex;
+            
+            // Manage interactivity based on stage
+            if (currentStage === 0) {
+                // Enable heart drawing on Stage 0
+                app.addEventListener('mousemove', createCursorHeart);
+                app.addEventListener('touchmove', handleTouchMove);
+            } else {
+                // Disable heart drawing on all subsequent stages
+                app.removeEventListener('mousemove', createCursorHeart);
+                app.removeEventListener('touchmove', handleTouchMove);
+                // Ensure button is visible for next steps
+                if (stageIndex < stages.length - 1) {
+                    nextButton.classList.remove('opacity-0', 'pointer-events-none');
+                }
+            }
+
+            // 1. Apply exit transition
+            container.style.opacity = 0;
+            container.style.transform = 'translateY(50px)';
+            heading.classList.remove('love-pulse'); // Stop pulse during transition
+
+            // 2. Wait for exit transition to complete, then update content and re-enter
+            setTimeout(() => {
+                heading.textContent = stage.heading;
+                subText.textContent = stage.sub;
+                decorations.innerHTML = stage.decoration;
+
+                if (stageIndex < stages.length - 1) {
+                    nextButton.textContent = stage.actionText;
+                } else {
+                    nextButton.classList.add('opacity-0', 'pointer-events-none');
+                }
+
+                // 3. Apply entrance transition
+                container.style.opacity = 1;
+                container.style.transform = 'translateY(0)';
+                heading.classList.add('love-pulse'); // Restart pulse
+
+                // 4. Check for Finale
+                if (stageIndex === stages.length - 1) {
+                    startFinale();
+                }
+
+            }, 750); // 750ms is half the transition duration
+        }
+
+        // --- 2. INTERACTIVE HEART DRAWING LOGIC ---
+
+        function createCursorHeart(event) {
+            // Only draw hearts on the first stage
+            if (currentStage !== 0) return;
+
+            const x = event.clientX;
+            const y = event.clientY;
+
+            const heart = document.createElement('span');
+            heart.className = 'cursor-heart text-red-500';
+            heart.innerHTML = '💖';
+            heart.style.left = `${x}px`;
+            heart.style.top = `${y}px`;
+
+            finaleLayer.appendChild(heart);
+
+            // Clean up the heart after the animation ends
+            heart.addEventListener('animationend', () => {
+                heart.remove();
+            });
+
+            // After the first interaction, automatically enable the button
+            if (nextButton.classList.contains('opacity-0')) {
+                subText.textContent = "Click 'Begin' or tap the screen when you're ready.";
+                nextButton.classList.remove('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        function handleTouchMove(event) {
+            // Prevent scrolling while drawing hearts
+            event.preventDefault();
+            // Process the first touch point
+            if (event.touches.length > 0) {
+                createCursorHeart(event.touches[0]);
+            }
+        }
+
+
+        // --- 3. PARALLAX MOUSE/TOUCH EFFECT LOGIC ---
+
+        function handleParallax(event) {
+            const x = event.clientX || (event.touches && event.touches[0].clientX);
+            const y = event.clientY || (event.touches && event.touches[0].clientY);
+
+            if (x === undefined || y === undefined) return;
+
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+
+            const moveX = (x - centerX) / centerX; // Range -1 to 1
+            const moveY = (y - centerY) / centerY; // Range -1 to 1
+
+            // Content moves slightly in the opposite direction (Shallow Layer)
+            container.style.transform = `translate3d(${moveX * 10}px, ${moveY * 10}px, 0)`;
+
+            // Background layer moves more intensely (Deep Layer)
+            parallaxLayer.style.transform = `translate3d(${moveX * -20}px, ${moveY * -20}px, 0)`;
+        }
+
+        document.body.addEventListener('mousemove', handleParallax);
+        document.body.addEventListener('touchmove', handleParallax);
+
+
+        // --- 4. FINALE LOGIC (Heart Storm - Unchanged) ---
+
+        function createHeart(x, y) {
+            const heart = document.createElement('div');
+            heart.className = 'confetti text-4xl';
+            heart.innerHTML = '❤️'; // Use heart emoji for confetti
+            heart.style.left = `${x}px`;
+            heart.style.top = `${y}px`;
+            heart.style.transition = 'none';
+            heart.style.opacity = 1;
+
+            // Random initial velocity
+            const angle = Math.random() * Math.PI; // Random angle from 0 to Pi (upwards/sideways)
+            const magnitude = Math.random() * 8 + 4; // Velocity magnitude
+            const vx = Math.cos(angle) * magnitude * (Math.random() > 0.5 ? 1 : -1); // Random horizontal direction
+            const vy = -Math.sin(angle) * magnitude; // Always upwards
+
+            const gravity = 0.2; // Gravity effect
+            let t = 0;
+            let currentX = x;
+            let currentY = y;
+
+            finaleLayer.appendChild(heart);
+
+            function animateHeart() {
+                t += 1;
+                const newVy = vy + gravity * t * 0.5; // Gravity pulling down over time
+                currentX += vx;
+                currentY += newVy;
+
+                heart.style.transform = `translate(${currentX - x}px, ${currentY - y}px) rotate(${t * 5}deg)`;
+
+                if (currentY < window.innerHeight + 50) {
+                    requestAnimationFrame(animateHeart);
+                } else {
+                    heart.remove();
+                }
+            }
+
+            requestAnimationFrame(animateHeart);
+        }
+
+        let heartStormInterval;
+        function startFinale() {
+            // Remove general click listener for stages
+            app.removeEventListener('click', handleAppClick);
+
+            // Start a continuous heart rain
+            heartStormInterval = setInterval(() => {
+                const x = Math.random() * window.innerWidth;
+                const y = -20; // Start slightly above viewport
+                createHeart(x, y);
+            }, 50); // Drop a heart every 50ms
+
+            // Start the grand explosion
+            const centerAppX = app.offsetWidth / 2;
+            const centerAppY = app.offsetHeight / 2;
+            for (let i = 0; i < 50; i++) {
+                // Launch hearts from the center
+                createHeart(app.offsetLeft + centerAppX, app.offsetTop + centerAppY);
+            }
+        }
+
+        // --- 5. EVENT LISTENERS & INITIALIZATION ---
+
+        function handleAppClick() {
+            updateStage(currentStage + 1);
+        }
+
+        // Use the whole app area for interaction (more immersive)
+        app.addEventListener('click', handleAppClick);
+
+        // Make the button also advance the stage if focused
+        nextButton.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent double-trigger from app click listener
+            updateStage(currentStage + 1);
+        });
+
+        // Initialize with Stage 0 specific message
+        updateStage(0);
+    </script>
+</body>
+</html>
